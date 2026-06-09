@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Properties — Panvel Realty</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/static/CSS/style.css">
+</head>
+
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">Panvel <span>Realty</span></a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/properties" class="active">Properties</a></li>
+      <li><a href="/contact">Contact Us</a></li>
+    </ul>
+    <a href="/contact" class="nav-cta">Free Consultation</a>
+    <button class="nav-mob" onclick="toggleNav()">☰</button>
+  </nav>
+
+  <div id="mob-nav">
+    <a href="/" onclick="toggleNav()">Home</a>
+    <a href="/properties" onclick="toggleNav()">Properties</a>
+    <a href="/contact" onclick="toggleNav()">Contact</a>
+    <a href="/contact" class="btn-gold" style="text-align:center;" onclick="toggleNav()">Free Consultation</a>
+  </div>
+
+  <div class="search-section" style="margin-top: 20px;">
+    <div class="search-wrap">
+      <div class="search-label">🔍 Filter <span>Properties</span> Dynamically</div>
+      <div class="search-box">
+        <div class="sf"><select id="s-type" onchange="filterProps()">
+            <option value="">All Types</option>
+            <option value="flat">Flat / Apartment</option>
+            <option value="shop">Shop / Commercial</option>
+            <option value="plot">Plot / Land</option>
+            <option value="building">Building</option>
+            <option value="office">Office Space</option>
+          </select></div>
+        <div class="sdiv"></div>
+        <div class="sf"><select id="s-purpose" onchange="filterProps()">
+            <option value="">Buy or Rent</option>
+            <option value="buy">Buy</option>
+            <option value="rent">Rent</option>
+          </select></div>
+        <div class="sdiv"></div>
+        <div class="sf"><select id="s-budget" onchange="filterProps()">
+            <option value="">Any Budget</option>
+            <option value="10">Under ₹10 Lakh</option>
+            <option value="25">Under ₹25 Lakh</option>
+            <option value="50">Under ₹50 Lakh</option>
+            <option value="100">Under ₹1 Crore</option>
+            <option value="999">Above ₹1 Crore</option>
+          </select></div>
+        <div class="sdiv"></div>
+        <div class="sf"><input type="text" id="s-kw" placeholder="Location, keyword..." oninput="filterProps()"></div>
+        <button class="sbtn" onclick="filterProps()">Search →</button>
+      </div>
+    </div>
+  </div>
+
+  <section id="properties">
+    <div class="main">
+      <div class="sec-tag">✦ Our Listings</div>
+      <h2 class="sec-title">Featured <span>Properties</span></h2>
+      <div class="sec-div"></div>
+      <p class="sec-sub">Kamothe aur Navi Mumbai ke best verified properties — buy ya rent dono available.</p>
+
+      <div class="ftabs" style="margin-top:28px;">
+        <button class="ftab active" onclick="setTab(this,'all')">All</button>
+        <button class="ftab" onclick="setTab(this,'buy')">Buy</button>
+        <button class="ftab" onclick="setTab(this,'rent')">Rent</button>
+        <button class="ftab" onclick="setTab(this,'flat')">Flats</button>
+        <button class="ftab" onclick="setTab(this,'shop')">Shops</button>
+        <button class="ftab" onclick="setTab(this,'plot')">Plots</button>
+        <button class="ftab" onclick="setTab(this,'building')">Buildings</button>
+      </div>
+
+      <div class="prop-grid" id="prop-grid"></div>
+      <div id="no-res" style="display:none;text-align:center;padding:48px;color:var(--muted);font-size:14px;">No
+        properties found. Try different filters.</div>
+    </div>
+  </section>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      
+      <!-- Carousel Container -->
+      <div class="modal-carousel-container">
+        <div class="modal-slides-wrapper" id="carousel-wrapper">
+          <!-- Slides will be injected dynamically -->
+        </div>
+        
+        <!-- Controls -->
+        <button class="carousel-prev" onclick="moveSlide(-1)">❮</button>
+        <button class="carousel-next" onclick="moveSlide(1)">❯</button>
+        
+        <!-- Indicators -->
+        <div class="carousel-dots" id="carousel-dots"></div>
+      </div>
+      
+      <!-- Thumbnail Gallery -->
+      <div class="carousel-thumbs" id="carousel-thumbs"></div>
+      
+      <div class="modal-title" id="m-title"></div>
+      <div class="modal-price" id="m-price"></div>
+      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;" id="m-feats"></div>
+      <div class="mfg"><label for="m-name">Your Name *</label><input type="text" id="m-name" placeholder="Aapka naam">
+      </div>
+      <div class="mfg"><label for="m-phone">Phone Number *</label><input type="tel" id="m-phone"
+          placeholder="+91 XXXXX XXXXX"></div>
+      <div class="mfg"><label for="m-msg">Message</label><textarea id="m-msg"
+          placeholder="Koi specific sawaal?"></textarea></div>
+      <div class="modal-btns">
+        <button class="mbtn-sub" onclick="submitModal()">Send Enquiry</button>
+        <button class="mbtn-wa" id="m-wa-btn" onclick="waEnquire()">💬 WhatsApp</button>
+      </div>
+      <div class="modal-success" id="m-success">✅ Enquiry bheji! Agent jald baat karega.</div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="fbot">
+        <p>© 2026 Panvel Realty. All rights reserved. | Kamothe, Navi Mumbai</p>
+        <p>Made with ❤️ for Navi Mumbai</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/JS/main.js"></script>
+</body>
+
+</html>

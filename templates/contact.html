@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Us — Panvel Realty</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="/static/CSS/style.css">
+</head>
+
+<body>
+
+  <nav>
+    <a href="/" class="nav-logo">Panvel <span>Realty</span></a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/properties">Properties</a></li>
+      <li><a href="/contact" class="active">Contact Us</a></li>
+    </ul>
+    <a href="/contact" class="nav-cta">Free Consultation</a>
+    <button class="nav-mob" onclick="toggleNav()">☰</button>
+  </nav>
+
+  <div id="mob-nav">
+    <a href="/" onclick="toggleNav()">Home</a>
+    <a href="/properties" onclick="toggleNav()">Properties</a>
+    <a href="/contact" onclick="toggleNav()">Contact</a>
+    <a href="/contact" class="btn-gold" style="text-align:center;" onclick="toggleNav()">Free Consultation</a>
+  </div>
+
+  <section id="contact" class="contact-section" style="padding:100px 5% 76px;">
+    <div style="max-width:1160px;margin:0 auto;">
+      <div class="contact-grid">
+
+        <div>
+          <div class="sec-tag">✦ Get In Touch</div>
+          <h2 class="sec-title" style="color:#fff;">Let's Find Your <span style="color:var(--gold)">Perfect
+              Property</span></h2>
+          <div class="sec-div"></div>
+          <p style="font-size:14px;color:rgba(255,255,255,0.5);line-height:1.75;margin-bottom:32px;font-weight:300;">Buy
+            ho ya sell, rent ho ya invest — hamare expert agents hamesha ready hain. Seedha call karo ya form bharo!</p>
+
+          <div class="contact-info">
+            <div class="ci-item">
+              <div class="ci-icon">📍</div>
+              <div>
+                <div class="ci-label">Address</div>
+                <div class="ci-value">Sector 7, Kamothe,<br>Navi Mumbai – 410209</div>
+              </div>
+            </div>
+            <div class="ci-item">
+              <div class="ci-icon">📞</div>
+              <div>
+                <div class="ci-label">Phone</div>
+                <div class="ci-value"><a href="tel:+919326552977" class="ci-link"
+                    style="color:var(--gold); text-decoration:none;">+91 93265 52977</a><br><a href="tel:+919326552977"
+                    class="ci-link" style="color:var(--gold); text-decoration:none;">+91 93265 52977</a></div>
+              </div>
+            </div>
+            <div class="ci-item">
+              <div class="ci-icon">✉️</div>
+              <div>
+                <div class="ci-label">Email</div>
+                <div class="ci-value"><a href="mailto:info@panvelrealty.com" class="ci-link"
+                    style="color:var(--gold); text-decoration:none;">info@panvelrealty.com</a></div>
+              </div>
+            </div>
+            <div class="ci-item">
+              <div class="ci-icon">💬</div>
+              <div>
+                <div class="ci-label">WhatsApp</div>
+                <div class="ci-value"><a
+                    href="https://wa.me/919326552977?text=Hello%20Panvel%20Realty%2C%20property%20enquiry%20karni%20thi"
+                    target="_blank" class="ci-link" style="color:var(--gold); text-decoration:none;">Chat on WhatsApp
+                    →</a></div>
+              </div>
+            </div>
+            <div class="ci-item">
+              <div class="ci-icon">🕐</div>
+              <div>
+                <div class="ci-label">Office Hours</div>
+                <div class="ci-value">Mon–Sat: 9:00 AM – 7:00 PM<br>Sunday: 10:00 AM – 4:00 PM</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <form class="cform" action="/submit-enquiry" method="POST">
+          <div class="cform-title">Free Consultation</div>
+          <div class="cform-sub">Hamare expert se baat karo — bilkul free!</div>
+          
+          <div class="fg-row">
+            <div class="fg">
+              <label for="c-name">Your Name</label>
+              <input type="text" id="c-name" name="name" required placeholder="Aapka naam">
+            </div>
+            <div class="fg">
+              <label for="c-phone">Phone Number</label>
+              <input type="tel" id="c-phone" name="phone" required placeholder="+91 XXXXX XXXXX">
+            </div>
+          </div>
+          
+          <div class="fg">
+            <label for="c-email">Email Address</label>
+            <input type="email" id="c-email" name="email" placeholder="yourname@email.com">
+          </div>
+          
+          <div class="fg-row">
+            <div class="fg">
+              <label for="c-looking">Looking For</label>
+              <select id="c-looking" name="looking_for">
+                <option>Buy Property</option>
+                <option>Rent Property</option>
+                <option>Sell Property</option>
+                <option>Investment Advice</option>
+              </select>
+            </div>
+            <div class="fg">
+              <label for="c-ptype">Property Type</label>
+              <select id="c-ptype" name="prop_type">
+                <option>Flat / Apartment</option>
+                <option>Shop / Commercial</option>
+                <option>Plot / Land</option>
+                <option>Building</option>
+                <option>Office Space</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="fg">
+            <label for="c-budget">Budget Range</label>
+            <select id="c-budget" name="budget">
+              <option>Under ₹10 Lakh</option>
+              <option>₹10L – ₹25L</option>
+              <option>₹25L – ₹50L</option>
+              <option>₹50L – ₹1 Crore</option>
+              <option>Above ₹1 Crore</option>
+            </select>
+          </div>
+          
+          <div class="fg">
+            <label for="c-msg">Message</label>
+            <textarea id="c-msg" name="message" placeholder="Koi specific requirement hai toh yahan likhein..."></textarea>
+          </div>
+          
+          <button type="submit" class="fsub">Send Enquiry →</button>
+          
+          {% if request.args.get('success') %}
+            <div class="fsuccess" style="display:block;">✅ Shukriya! Hamara agent 24 ghante me aapse contact karega.</div>
+          {% endif %}
+        </form>
+
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <div class="fbot">
+        <p>© 2026 Panvel Realty. All rights reserved. | Kamothe, Navi Mumbai</p>
+        <p>Made with ❤️ for Navi Mumbai</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/static/JS/main.js"></script>
+</body>
+
+</html>
