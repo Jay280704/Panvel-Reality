@@ -35,12 +35,32 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # ===== PURE PYTHON MYSQL CONNECTION =====
 def get_db_connection():
+    db_host = os.environ.get('DB_HOST', 'localhost')
+    db_user = os.environ.get('DB_USER', 'root')
+    db_password = os.environ.get('DB_PASSWORD', '')
+    db_name = os.environ.get('DB_NAME', 'panvel_realty')
+    db_port = int(os.environ.get('DB_PORT', 3306))
+    
+    db_url = os.environ.get('DATABASE_URL')
+    if db_url and db_url.startswith('mysql://'):
+        try:
+            from urllib.parse import urlparse
+            url = urlparse(db_url)
+            db_host = url.hostname or db_host
+            db_user = url.username or db_user
+            db_password = url.password or db_password
+            db_name = url.path.lstrip('/') or db_name
+            db_port = url.port or db_port
+        except Exception as e:
+            print("Error parsing DATABASE_URL:", e)
+
     return pymysql.connect(
-        host='localhost',
-        user='root',       # Apne XAMPP ka username
-        password='',       # Apne XAMPP ka password 
-        database='panvel_realty',
-        port=3306          # Agar port badla tha toh 3307 kar dena
+        host=db_host,
+        user=db_user,
+        password=db_password,
+        database=db_name,
+        port=db_port,
+        charset='utf8mb4'
     )
 
 def init_db():
