@@ -68,13 +68,33 @@ def init_db():
         conn = get_db_connection()
         cur = conn.cursor()
         
-        # 1. Enquiries Table Schema Update
-        cur.execute("SHOW COLUMNS FROM enquiries LIKE 'status'")
-        result = cur.fetchone()
-        if not result:
-            cur.execute("ALTER TABLE enquiries ADD COLUMN status VARCHAR(20) DEFAULT 'Pending'")
-            conn.commit()
-            print("Status column added successfully.")
+        # 1. Enquiries Table Schema Setup
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS enquiries (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                client_name VARCHAR(100) NOT NULL,
+                client_phone VARCHAR(20) NOT NULL,
+                client_email VARCHAR(100),
+                looking_for VARCHAR(50),
+                property_type VARCHAR(50),
+                budget_range VARCHAR(50),
+                message TEXT,
+                status VARCHAR(20) DEFAULT 'Pending',
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        conn.commit()
+        
+        # Verify status column
+        try:
+            cur.execute("SHOW COLUMNS FROM enquiries LIKE 'status'")
+            result = cur.fetchone()
+            if not result:
+                cur.execute("ALTER TABLE enquiries ADD COLUMN status VARCHAR(20) DEFAULT 'Pending'")
+                conn.commit()
+                print("Status column added successfully.")
+        except Exception as col_err:
+            print("Status column verification error:", col_err)
             
         # 2. Properties Table Schema Setup
         cur.execute("""
