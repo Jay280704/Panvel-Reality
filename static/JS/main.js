@@ -197,9 +197,75 @@ function closeModal(){document.getElementById('modal').classList.remove('open');
 function submitModal(){
   const name=document.getElementById('m-name').value.trim();
   const phone=document.getElementById('m-phone').value.trim();
+  const message=document.getElementById('m-msg').value.trim();
+  
   if(!name||!phone){alert('Please fill your name and phone number!');return;}
-  document.getElementById('m-success').style.display='block';
-  setTimeout(closeModal,2800);
+  
+  // Prepare data matching contact form fields
+  const formData = new URLSearchParams();
+  formData.append('name', name);
+  formData.append('phone', phone);
+  formData.append('email', '');
+  
+  if (currentProp) {
+    formData.append('looking_for', currentProp.purpose === 'rent' ? 'Rent Property' : 'Buy Property');
+    
+    // Map backend expected property type options
+    let pTypeDisplay = 'Flat / Apartment';
+    if (currentProp.type === 'shop') pTypeDisplay = 'Shop / Commercial';
+    else if (currentProp.type === 'plot') pTypeDisplay = 'Plot / Land';
+    else if (currentProp.type === 'building') pTypeDisplay = 'Building';
+    else if (currentProp.type === 'office') pTypeDisplay = 'Office Space';
+    formData.append('prop_type', pTypeDisplay);
+    
+    formData.append('budget', currentProp.price);
+  } else {
+    formData.append('looking_for', 'Buy Property');
+    formData.append('prop_type', 'Flat / Apartment');
+    formData.append('budget', 'Any Budget');
+  }
+  
+  formData.append('message', message);
+  
+  // Disable button or change text to loading
+  const submitBtn = document.querySelector('.mbtn-sub');
+  const originalText = submitBtn ? submitBtn.textContent : 'Send Enquiry';
+  if (submitBtn) {
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+  }
+  
+  fetch('/submit-enquiry', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    body: formData.toString()
+  })
+  .then(response => {
+    if (response.ok) {
+      document.getElementById('m-success').style.display='block';
+      // Clear inputs
+      document.getElementById('m-name').value = '';
+      document.getElementById('m-phone').value = '';
+      setTimeout(() => {
+        closeModal();
+        document.getElementById('m-success').style.display='none';
+      }, 2800);
+    } else {
+      alert('Something went wrong. Please try again.');
+    }
+  })
+  .catch(err => {
+    console.error('Error submitting enquiry:', err);
+    alert('Error submitting enquiry. Please check your connection.');
+  })
+  .finally(() => {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = originalText;
+    }
+  });
 }
 
 // ===== MESSAGING REDIRECTIONS =====
