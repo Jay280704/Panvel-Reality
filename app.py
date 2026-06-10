@@ -223,10 +223,10 @@ def init_db():
         """)
         conn.commit()
 
-        # Seed default admin user if table is empty
-        cur.execute("SELECT COUNT(*) FROM admin_users")
-        admin_count = cur.fetchone()[0]
-        if admin_count == 0:
+        # Seed default admin user if 'admin' does not exist
+        cur.execute("SELECT COUNT(*) FROM admin_users WHERE username = %s", ("admin",))
+        admin_exists = cur.fetchone()[0] > 0
+        if not admin_exists:
             h_password = hash_password("admin123")
             h_answer = hash_password("panvelrealty")
             cur.execute("""
@@ -234,7 +234,7 @@ def init_db():
                 VALUES (%s, %s, %s, %s, %s)
             """, ("admin", h_password, "main_admin", "What is your default recovery key?", h_answer))
             conn.commit()
-            print("Default admin user seeded successfully.")
+            print("Default admin user 'admin' seeded successfully.")
         else:
             cur.execute("UPDATE admin_users SET role = 'main_admin' WHERE username = 'admin'")
             conn.commit()
@@ -280,13 +280,20 @@ def admin_login():
             cur.close()
             conn.close()
             
-            if user and check_password(password, user['password']):
-                session['admin_logged_in'] = True
-                session.permanent = False
-                session['admin_username'] = user['username']
-                session['admin_user_id'] = user['id']
-                return redirect(url_for('admin_dashboard', login_event='true'))
+            if user:
+                print(f"[LOGIN INFO] User '{username}' found in database. Checking password...")
+                if check_password(password, user['password']):
+                    print(f"[LOGIN INFO] Password match. Successful login for '{username}'.")
+                    session['admin_logged_in'] = True
+                    session.permanent = False
+                    session['admin_username'] = user['username']
+                    session['admin_user_id'] = user['id']
+                    return redirect(url_for('admin_dashboard', login_event='true'))
+                else:
+                    print(f"[LOGIN WARNING] Password mismatch for user '{username}'.")
+                    error = "Invalid Username or Password!"
             else:
+                print(f"[LOGIN WARNING] User '{username}' NOT found in database.")
                 error = "Invalid Username or Password!"
         except Exception as e:
             error = f"Database Error: {str(e)}"
