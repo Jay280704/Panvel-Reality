@@ -41,27 +41,85 @@ def get_db_connection():
     db_name = os.environ.get('DB_NAME', 'panvel_realty')
     db_port = int(os.environ.get('DB_PORT', 3306))
     
-    db_url = os.environ.get('DATABASE_URL')
-    if db_url and db_url.startswith('mysql://'):
-        try:
-            from urllib.parse import urlparse
-            url = urlparse(db_url)
-            db_host = url.hostname or db_host
-            db_user = url.username or db_user
-            db_password = url.password or db_password
-            db_name = url.path.lstrip('/') or db_name
-            db_port = url.port or db_port
-        except Exception as e:
-            print("Error parsing DATABASE_URL:", e)
+    ssl_config = None
+    db_ssl = os.environ.get('DB_SSL', '').lower()
+    if db_ssl == 'true' or os.environ.get('DB_SSL_CA'):
+        if os.environ.get('DB_SSL_CA'):
+            ssl_config = {'ca': os.environ.get('DB_SSL_CA')}
+        else:
+            ssl_config = {}
 
-    return pymysql.connect(
-        host=db_host,
-        user=db_user,
-        password=db_password,
-        database=db_name,
-        port=db_port,
-        charset='utf8mb4'
-    )
+    # Support case-insensitive environment variable lookup (Render environment variables are case-sensitive)
+    db_url = os.environ.get('DATABASE_URL') or os.environ.get('Database_URL') or os.environ.get('database_url')
+    if db_url:
+        db_url_lower = db_url.lower()
+        if db_url_lower.startswith('mysql://') or db_url_lower.startswith('mysql+pymysql://'):
+            try:
+                from urllib.parse import unquote
+                # Enable SSL if 'ssl' parameter is found in URL
+                if 'ssl' in db_url_lower:
+                    ssl_config = {}
+                
+                # Strip prefix
+                rem = db_url
+                if rem.lower().startswith('mysql://'):
+                    rem = rem[8:]
+                elif rem.lower().startswith('mysql+pymysql://'):
+                    rem = rem[16:]
+                
+                # Robust parsing for passwords with special characters (like slashes '/') using rsplit on last '@'
+                if '@' in rem:
+                    auth_part, host_db_part = rem.rsplit('@', 1)
+                    
+                    if ':' in auth_part:
+                        db_user_raw, db_pass_raw = auth_part.split(':', 1)
+                        db_user = unquote(db_user_raw)
+                        db_password = unquote(db_pass_raw)
+                    else:
+                        db_user = unquote(auth_part)
+                        
+                    if '/' in host_db_part:
+                        host_port, path_part = host_db_part.split('/', 1)
+                        db_name = path_part.split('?')[0]
+                    else:
+                        host_port = host_db_part
+                        db_name = 'panvel_realty'
+                        
+                    if ':' in host_port:
+                        db_host, port_str = host_port.split(':', 1)
+                        db_port = int(port_str.split('?')[0])
+                    else:
+                        db_host = host_port
+                else:
+                    # Fallback to standard urlparse
+                    from urllib.parse import urlparse
+                    url = urlparse(db_url)
+                    db_host = url.hostname or db_host
+                    db_user = unquote(url.username) if url.username else db_user
+                    db_password = unquote(url.password) if url.password else db_password
+                    db_name = url.path.lstrip('/') or db_name
+                    db_port = url.port or db_port
+            except Exception as e:
+                print("Error parsing DATABASE_URL:", e)
+        elif db_url_lower.startswith('postgres://') or db_url_lower.startswith('postgresql://'):
+            print("WARNING: DATABASE_URL is a PostgreSQL URL, but this application is configured for MySQL (PyMySQL).")
+            print("Please configure a MySQL database and set its connection details in DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT or a MySQL DATABASE_URL.")
+
+    print(f"[DB INFO] Attempting connection: host={db_host}, user={db_user}, database={db_name}, port={db_port}, ssl={ssl_config is not None}")
+    
+    try:
+        return pymysql.connect(
+            host=db_host,
+            user=db_user,
+            password=db_password,
+            database=db_name,
+            port=db_port,
+            charset='utf8mb4',
+            ssl=ssl_config
+        )
+    except Exception as e:
+        print(f"[DB ERROR] Failed to connect to database at {db_host}:{db_port}. Error details: {e}")
+        raise e
 
 def init_db():
     try:
@@ -762,6 +820,8 @@ def delete_property(id):
     except Exception as e:
         return {"error": str(e)}, 500
 
+# Initialize database on module import (needed for Render / Gunicorn)
+init_db()
+
 if __name__ == '__main__':
-    init_db()
     app.run(debug=True)
