@@ -333,10 +333,13 @@ def forgot_password():
                 if user:
                     step = 2
                     security_question = user['security_question']
+                    print(f"[FORGOT PASSWORD INFO] Found user '{username}' with question: '{security_question}'")
                 else:
                     error = "Username not found!"
+                    print(f"[FORGOT PASSWORD WARNING] User '{username}' not found in database.")
             except Exception as e:
                 error = f"Database Error: {str(e)}"
+                print(f"[FORGOT PASSWORD ERROR] Database error on search: {e}")
                 
         elif action == 'reset_password':
             security_answer = request.form.get('security_answer')
@@ -353,7 +356,12 @@ def forgot_password():
                     user = cur.fetchone()
                     
                     if user:
-                        if check_password(security_answer.strip().lower(), user['security_answer']):
+                        submitted_ans = security_answer.strip().lower()
+                        submitted_ans_no_spaces = submitted_ans.replace(" ", "")
+                        print(f"[FORGOT PASSWORD INFO] Verifying security answer for '{username}'...")
+                        
+                        if check_password(submitted_ans, user['security_answer']) or check_password(submitted_ans_no_spaces, user['security_answer']):
+                            print(f"[FORGOT PASSWORD INFO] Security answer matched successfully for '{username}'")
                             h_password = hash_password(new_password)
                             cur.execute("UPDATE admin_users SET password = %s WHERE id = %s", (h_password, user['id']))
                             conn.commit()
@@ -361,6 +369,7 @@ def forgot_password():
                             conn.close()
                             return redirect(url_for('admin_login', reset_success=True))
                         else:
+                            print(f"[FORGOT PASSWORD WARNING] Security answer verification failed for '{username}'")
                             error = "Incorrect answer to security question!"
                             step = 2
                             security_question = user['security_question']
@@ -373,6 +382,7 @@ def forgot_password():
                 except Exception as e:
                     error = f"Database Error: {str(e)}"
                     step = 2
+                    print(f"[FORGOT PASSWORD ERROR] Database error on reset: {e}")
                     
     return render_template('forgot_password.html', error=error, step=step, username=username, security_question=security_question)
 
