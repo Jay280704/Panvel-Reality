@@ -5,17 +5,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Admin Login — Panvel Realty</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
   :root {
-    --bg-dark: #0f051d;
-    --card-bg: rgba(38, 20, 74, 0.35);
-    --primary-purple: #3b1f6e;
-    --light-purple: #7b6fa0;
-    --gold: #c9973a;
-    --gold-hover: #a67c2a;
+    --bg-dark: #090412;
+    --card-bg: rgba(22, 12, 44, 0.45);
+    --primary-purple: #4a2985;
+    --light-purple: #81729c;
+    --gold: #d4af37;
+    --gold-hover: #b59223;
     --text-white: #ffffff;
-    --text-muted: #b5adc8;
+    --text-muted: #a297c0;
     --error-red: #ef4444;
+    --success-green: #10b981;
   }
 
   * {
@@ -28,15 +30,17 @@
     font-family: 'DM Sans', sans-serif;
     background-color: var(--bg-dark);
     background-image: 
-      radial-gradient(circle at 10% 20%, rgba(59, 31, 110, 0.45) 0%, transparent 40%),
-      radial-gradient(circle at 90% 80%, rgba(201, 151, 58, 0.15) 0%, transparent 45%);
+      radial-gradient(circle at 15% 15%, rgba(111, 79, 201, 0.25) 0%, transparent 45%),
+      radial-gradient(circle at 85% 85%, rgba(212, 175, 55, 0.12) 0%, transparent 45%),
+      linear-gradient(135deg, #090412 0%, #150a28 100%);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
     color: var(--text-white);
-    overflow: hidden;
     padding: 20px;
+    position: relative;
+    overflow-x: hidden;
   }
 
   /* Main Container */
@@ -50,13 +54,14 @@
   /* Glassmorphic Card */
   .login-card {
     background: var(--card-bg);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
     border-radius: 24px;
-    padding: 40px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    padding: 44px 40px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
     animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    border-top: 1px solid rgba(212, 175, 55, 0.2);
   }
 
   /* Branding */
@@ -67,7 +72,7 @@
 
   .brand-logo {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 32px;
+    font-size: 34px;
     font-weight: 700;
     letter-spacing: 0.5px;
     color: var(--text-white);
@@ -76,16 +81,15 @@
 
   .brand-logo span {
     color: var(--gold);
-    font-style: italic;
   }
 
   .brand-subtitle {
-    font-size: 13px;
+    font-size: 11px;
     color: var(--text-muted);
     text-transform: uppercase;
-    letter-spacing: 2px;
-    margin-top: 6px;
-    font-weight: 500;
+    letter-spacing: 3px;
+    margin-top: 8px;
+    font-weight: 600;
   }
 
   /* Form Elements */
@@ -97,36 +101,55 @@
   .form-label {
     display: block;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1px;
     color: var(--gold);
     margin-bottom: 8px;
   }
 
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 16px;
+    color: var(--text-muted);
+    font-size: 14px;
+    pointer-events: none;
+    transition: color 0.3s ease;
+  }
+
   .input-control {
     width: 100%;
-    padding: 14px 16px;
+    padding: 14px 16px 14px 44px;
     background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
-    font-size: 15px;
+    font-size: 14px;
     color: var(--text-white);
     outline: none;
     transition: all 0.3s ease;
   }
 
+  .input-control::placeholder {
+    color: rgba(255, 255, 255, 0.25);
+  }
+
   .input-control:focus {
     border-color: var(--gold);
     background: rgba(255, 255, 255, 0.07);
-    box-shadow: 0 0 0 3px rgba(201, 151, 58, 0.2);
+    box-shadow: 0 0 14px rgba(212, 175, 55, 0.15);
+  }
+
+  .input-control:focus + .input-icon {
+    color: var(--gold);
   }
 
   /* Password Field Specifics */
-  .password-wrapper {
-    position: relative;
-  }
-
   .password-wrapper .input-control {
     padding-right: 48px;
   }
@@ -140,10 +163,11 @@
     border: none;
     color: var(--text-muted);
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 15px;
     transition: color 0.2s ease;
     user-select: none;
+    display: flex;
+    align-items: center;
   }
 
   .toggle-password:hover {
@@ -153,21 +177,23 @@
   /* Submit Button */
   .btn-login {
     width: 100%;
-    padding: 14px;
-    background: var(--gold);
+    padding: 15px;
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-hover) 100%);
     color: var(--text-white);
     border: none;
     border-radius: 12px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.3s ease;
     margin-top: 8px;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
   }
 
   .btn-login:hover {
-    background: var(--gold-hover);
-    box-shadow: 0 8px 20px rgba(201, 151, 58, 0.25);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.35);
   }
 
   .btn-login:active {
@@ -176,8 +202,8 @@
 
   /* Error Alert */
   .error-alert {
-    background: rgba(239, 68, 68, 0.12);
-    border: 1px solid rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.25);
     color: #fca5a5;
     padding: 12px 16px;
     border-radius: 12px;
@@ -185,11 +211,31 @@
     margin-bottom: 24px;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
     animation: shake 0.4s ease;
   }
 
-  .error-alert svg {
+  .error-alert i {
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* Success Alert */
+  .success-alert {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: #a7f3d0;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .success-alert i {
+    font-size: 14px;
     flex-shrink: 0;
   }
 
@@ -197,7 +243,7 @@
   .back-link {
     display: block;
     text-align: center;
-    margin-top: 25px;
+    margin-top: 28px;
     font-size: 13px;
     color: var(--text-muted);
     text-decoration: none;
@@ -226,10 +272,9 @@
     75% { transform: translateX(6px); }
   }
 
-  /* Responsive Adjustments */
   @media (max-width: 480px) {
     .login-card {
-      padding: 30px 20px;
+      padding: 36px 24px;
     }
   }
 </style>
@@ -245,19 +290,14 @@
 
       {% if error %}
       <div class="error-alert">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M7.938 2.016A.13.13 0 0 1 8.002 2a.13.13 0 0 1 .063.016.146.146 0 0 1 .054.057l6.857 11.667c.036.06.035.124.002.183a.163.163 0 0 1-.054.06.116.116 0 0 1-.066.017H1.146a.115.115 0 0 1-.066-.017.163.163 0 0 1-.054-.06.176.176 0 0 1 .002-.183L7.884 2.073a.147.147 0 0 1 .054-.057zm1.044-.45a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566z"/>
-          <path d="M7.002 12a1 1 0 1 1 2 0 1 1 0 0 1-2 0zM7.1 5.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995z"/>
-        </svg>
+        <i class="fa-solid fa-triangle-exclamation"></i>
         <span>{{ error }}</span>
       </div>
       {% endif %}
 
       {% if success_message %}
-      <div class="success-alert" style="background: rgba(16, 185, 129, 0.12); border: 1px solid rgba(16, 185, 129, 0.3); color: #a7f3d0; padding: 12px 16px; border-radius: 12px; font-size: 13px; margin-bottom: 24px; display: flex; align-items: center; gap: 8px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
-          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-        </svg>
+      <div class="success-alert">
+        <i class="fa-solid fa-circle-check"></i>
         <span>{{ success_message }}</span>
       </div>
       {% endif %}
@@ -265,37 +305,45 @@
       <form action="/admin/login" method="POST">
         <div class="form-group">
           <label class="form-label" for="username">Username</label>
-          <input type="text" id="username" name="username" class="input-control" required autocomplete="username" placeholder="Enter admin username" autofocus>
+          <div class="input-wrapper">
+            <input type="text" id="username" name="username" class="input-control" required autocomplete="username" placeholder="Enter admin username" autofocus>
+            <i class="fa-solid fa-user input-icon"></i>
+          </div>
         </div>
 
         <div class="form-group">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
             <label class="form-label" for="password" style="margin-bottom: 0;">Password</label>
-            <a href="/admin/forgot-password" style="font-size: 11px; color: var(--gold); text-decoration: none; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px; transition: color 0.2s ease;" onmouseover="this.style.color='#a67c2a'" onmouseout="this.style.color='#c9973a'">Forgot Password?</a>
+            <a href="/admin/forgot-password" style="font-size: 11px; color: var(--gold); text-decoration: none; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px; transition: color 0.2s ease;">Forgot?</a>
           </div>
-          <div class="password-wrapper">
+          <div class="password-wrapper input-wrapper">
             <input type="password" id="password" name="password" class="input-control" required autocomplete="current-password" placeholder="Enter admin password">
-            <button type="button" class="toggle-password" onclick="togglePasswordVisibility()">SHOW</button>
+            <i class="fa-solid fa-lock input-icon"></i>
+            <button type="button" class="toggle-password" onclick="togglePasswordVisibility()" aria-label="Toggle password visibility">
+              <i class="fa-solid fa-eye" id="eye-icon"></i>
+            </button>
           </div>
         </div>
 
-        <button type="submit" class="btn-login">Sign In</button>
+        <button type="submit" class="btn-login">Sign In <i class="fa-solid fa-arrow-right-to-bracket" style="margin-left: 6px;"></i></button>
       </form>
 
-      <a href="/" class="back-link">← Back to Website</a>
+      <a href="/" class="back-link"><i class="fa-solid fa-arrow-left" style="margin-right: 6px; font-size:11px;"></i> Back to Website</a>
     </div>
   </div>
 
   <script>
     function togglePasswordVisibility() {
       const passwordField = document.getElementById('password');
-      const toggleBtn = document.querySelector('.toggle-password');
+      const eyeIcon = document.getElementById('eye-icon');
       if (passwordField.type === 'password') {
         passwordField.type = 'text';
-        toggleBtn.textContent = 'HIDE';
+        eyeIcon.classList.remove('fa-eye');
+        eyeIcon.classList.add('fa-eye-slash');
       } else {
         passwordField.type = 'password';
-        toggleBtn.textContent = 'SHOW';
+        eyeIcon.classList.remove('fa-eye-slash');
+        eyeIcon.classList.add('fa-eye');
       }
     }
   </script>

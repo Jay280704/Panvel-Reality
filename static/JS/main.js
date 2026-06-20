@@ -1,90 +1,103 @@
 // ===== PROPERTY STORAGE DATA =====
 let props = [];
 
-let activeTab='all';
-let currentProp=null;
+let activeTab = 'all';
+let currentProp = null;
 
 // ===== CORE ENGINE HANDLERS =====
-function renderProps(list){
-  const g=document.getElementById('prop-grid');
-  if(!g) return; // Agar dusre page par ho jahan grid nahi hai
-  const nr=document.getElementById('no-res');
-  if(!list.length){g.innerHTML='';if(nr)nr.style.display='block';return;}
-  if(nr) nr.style.display='none';
-  g.innerHTML=list.map(p=>`
+function renderProps(list) {
+  const g = document.getElementById('prop-grid');
+  if (!g) return; // Agar dusre page par ho jahan grid nahi hai
+  const nr = document.getElementById('no-res');
+  if (!list.length) {
+    g.innerHTML = '';
+    if (nr) nr.style.display = 'block';
+    return;
+  }
+  if (nr) nr.style.display = 'none';
+  
+  g.innerHTML = list.map(p => `
     <div class="prop-card">
       <div class="prop-img-wrap">
         <img src="${p.img}" alt="${p.name}" loading="lazy">
-        <span class="pbadge ${p.purpose==='rent'?'rent':''}">${p.badge}</span>
-        <span class="ptype">${p.type.charAt(0).toUpperCase()+p.type.slice(1)}</span>
+        <span class="pbadge ${p.purpose === 'rent' ? 'rent' : ''}">${p.badge}</span>
+        <span class="ptype">${p.type.charAt(0).toUpperCase() + p.type.slice(1)}</span>
       </div>
       <div class="prop-body">
         <div class="prop-price">${p.price}</div>
         <div class="prop-name">${p.name}</div>
-        <div class="prop-loc">📍 ${p.loc}</div>
+        <div class="prop-loc">
+          <i class="fa-solid fa-location-dot" style="color: var(--gold); margin-right: 6px;"></i> ${p.loc}
+        </div>
         <div class="prop-feats">
-          ${p.area!=='—'?`<div class="pfeat">📐 <strong>${p.area}</strong></div>`:''}
-          ${p.beds!=='—'?`<div class="pfeat">🛏️ <strong>${p.beds}</strong></div>`:''}
-          ${p.bath!=='—'?`<div class="pfeat">🚿 <strong>${p.bath}</strong></div>`:''}
-          ${p.parking!=='—'?`<div class="pfeat">🚗 <strong>${p.parking}P</strong></div>`:''}
+          ${p.area !== '—' ? `<div class="pfeat"><i class="fa-solid fa-expand" style="color: var(--purple-mid); margin-right: 4px;"></i> <strong>${p.area}</strong></div>` : ''}
+          ${p.beds !== '—' ? `<div class="pfeat"><i class="fa-solid fa-bed" style="color: var(--purple-mid); margin-right: 4px;"></i> <strong>${p.beds}</strong></div>` : ''}
+          ${p.bath !== '—' ? `<div class="pfeat"><i class="fa-solid fa-bath" style="color: var(--purple-mid); margin-right: 4px;"></i> <strong>${p.bath} Bath</strong></div>` : ''}
+          ${p.parking !== '—' ? `<div class="pfeat"><i class="fa-solid fa-car" style="color: var(--purple-mid); margin-right: 4px;"></i> <strong>${p.parking}P</strong></div>` : ''}
         </div>
         <div class="prop-btns">
-          <button class="pbtn-enquire" onclick="openModal(${p.id})">Enquire Now</button>
-          <button class="pbtn-wa" onclick="waQuick(${p.id})" title="WhatsApp" aria-label="Enquire via WhatsApp">💬</button>
-          <button class="pbtn-call" onclick="callAgent()" title="Call Agent" aria-label="Call Agent">📞</button>
+          <button class="pbtn-enquire" onclick="openModal(${p.id})">Enquire Now <i class="fa-solid fa-arrow-right" style="margin-left: 4px;"></i></button>
+          <button class="pbtn-wa" onclick="waQuick(${p.id})" title="WhatsApp" aria-label="Enquire via WhatsApp">
+            <i class="fa-brands fa-whatsapp"></i>
+          </button>
+          <button class="pbtn-call" onclick="callAgent()" title="Call Agent" aria-label="Call Agent">
+            <i class="fa-solid fa-phone"></i>
+          </button>
         </div>
       </div>
     </div>
   `).join('');
 }
 
-function setTab(el,f){
-  document.querySelectorAll('.ftab').forEach(t=>t.classList.remove('active'));
+function setTab(el, f) {
+  document.querySelectorAll('.ftab').forEach(t => t.classList.remove('active'));
   el.classList.add('active');
-  activeTab=f;
+  activeTab = f;
   applyFilters();
 }
 
-function applyFilters(){
-  let list=props;
-  if(activeTab!=='all') list=list.filter(p=>p.type===activeTab||p.purpose===activeTab);
+function applyFilters() {
+  let list = props;
+  if (activeTab !== 'all') {
+    list = list.filter(p => p.type === activeTab || p.purpose === activeTab);
+  }
   renderProps(list);
 }
 
-function filterProps(){
-  const type=document.getElementById('s-type')?.value;
-  const purpose=document.getElementById('s-purpose')?.value;
-  const budget=document.getElementById('s-budget')?.value;
-  const kw=document.getElementById('s-kw')?.value?.toLowerCase() || '';
+function filterProps() {
+  const type = document.getElementById('s-type')?.value;
+  const purpose = document.getElementById('s-purpose')?.value;
+  const budget = document.getElementById('s-budget')?.value;
+  const kw = document.getElementById('s-kw')?.value?.toLowerCase() || '';
   
-  let list=props;
-  if(type) list=list.filter(p=>p.type===type);
-  if(purpose) list=list.filter(p=>p.purpose===purpose);
+  let list = props;
+  if (type) list = list.filter(p => p.type === type);
+  if (purpose) list = list.filter(p => p.purpose === purpose);
   
-  if(budget){
-    const bv=parseFloat(budget);
-    if(bv === 999){
-      list=list.filter(p=>p.purpose==='buy' && p.priceV>=100);
+  if (budget) {
+    const bv = parseFloat(budget);
+    if (bv === 999) {
+      list = list.filter(p => p.purpose === 'buy' && p.priceV >= 100);
     } else {
-      list=list.filter(p=>{
-        if(p.purpose === 'rent') return true; 
+      list = list.filter(p => {
+        if (p.purpose === 'rent') return true; 
         return p.priceV <= bv;
       });
     }
   }
   
-  if(kw) list=list.filter(p=>p.name.toLowerCase().includes(kw)||p.loc.toLowerCase().includes(kw));
+  if (kw) list = list.filter(p => p.name.toLowerCase().includes(kw) || p.loc.toLowerCase().includes(kw));
   
   const grid = document.getElementById('prop-grid');
-  if(grid) {
+  if (grid) {
     renderProps(list);
   } else {
     // Redirect to /properties page with search params
     const params = new URLSearchParams();
-    if(type) params.set('type', type);
-    if(purpose) params.set('purpose', purpose);
-    if(budget) params.set('budget', budget);
-    if(kw) params.set('kw', kw);
+    if (type) params.set('type', type);
+    if (purpose) params.set('purpose', purpose);
+    if (budget) params.set('budget', budget);
+    if (kw) params.set('kw', kw);
     window.location.href = '/properties?' + params.toString();
   }
 }
@@ -93,10 +106,10 @@ function filterProps(){
 let currentSlideIndex = 0;
 let carouselImages = [];
 
-function openModal(id){
-  const p=props.find(x=>x.id===id);
-  if(!p) return;
-  currentProp=p;
+function openModal(id) {
+  const p = props.find(x => x.id === id);
+  if (!p) return;
+  currentProp = p;
   
   carouselImages = p.images && p.images.length > 0 ? p.images : [p.img];
   currentSlideIndex = 0;
@@ -144,16 +157,18 @@ function openModal(id){
   
   updateCarousel();
   
-  document.getElementById('m-title').textContent=p.name;
-  document.getElementById('m-price').textContent=p.price;
-  document.getElementById('m-msg').value='Interested in: '+p.name+' ('+p.loc+')';
-  document.getElementById('m-success').style.display='none';
-  const feats=document.getElementById('m-feats');
-  feats.innerHTML=[
-    p.area!=='—'?`<span style="background:var(--purple-light);color:var(--purple);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500;">📐 ${p.area}</span>`:'',
-    p.beds!=='—'?`<span style="background:var(--purple-light);color:var(--purple);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500;">🛏️ ${p.beds}</span>`:'',
-    p.bath!=='—'?`<span style="background:var(--purple-light);color:var(--purple);padding:4px 10px;border-radius:20px;font-size:11px;font-weight:500;">🚿 ${p.bath} Bath</span>`:'',
+  document.getElementById('m-title').textContent = p.name;
+  document.getElementById('m-price').textContent = p.price;
+  document.getElementById('m-msg').value = 'Interested in: ' + p.name + ' (' + p.loc + ')';
+  document.getElementById('m-success').style.display = 'none';
+  const feats = document.getElementById('m-feats');
+  
+  feats.innerHTML = [
+    p.area !== '—' ? `<span style="background:var(--purple-light); color:var(--purple); padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600;"><i class="fa-solid fa-expand" style="margin-right: 4px;"></i> ${p.area}</span>` : '',
+    p.beds !== '—' ? `<span style="background:var(--purple-light); color:var(--purple); padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600;"><i class="fa-solid fa-bed" style="margin-right: 4px;"></i> ${p.beds}</span>` : '',
+    p.bath !== '—' ? `<span style="background:var(--purple-light); color:var(--purple); padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600;"><i class="fa-solid fa-bath" style="margin-right: 4px;"></i> ${p.bath} Bath</span>` : '',
   ].join('');
+  
   document.getElementById('modal').classList.add('open');
 }
 
@@ -192,14 +207,19 @@ function goToSlide(idx) {
   updateCarousel();
 }
 
-function closeModal(){document.getElementById('modal').classList.remove('open');}
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
 
-function submitModal(){
-  const name=document.getElementById('m-name').value.trim();
-  const phone=document.getElementById('m-phone').value.trim();
-  const message=document.getElementById('m-msg').value.trim();
+function submitModal() {
+  const name = document.getElementById('m-name').value.trim();
+  const phone = document.getElementById('m-phone').value.trim();
+  const message = document.getElementById('m-msg').value.trim();
   
-  if(!name||!phone){alert('Please fill your name and phone number!');return;}
+  if (!name || !phone) {
+    alert('Please fill your name and phone number!');
+    return;
+  }
   
   // Prepare data matching contact form fields
   const formData = new URLSearchParams();
@@ -232,7 +252,7 @@ function submitModal(){
   const originalText = submitBtn ? submitBtn.textContent : 'Send Enquiry';
   if (submitBtn) {
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending...';
+    submitBtn.innerHTML = 'Sending <i class="fa-solid fa-spinner fa-spin" style="margin-left: 6px;"></i>';
   }
   
   fetch('/submit-enquiry', {
@@ -244,17 +264,20 @@ function submitModal(){
   })
   .then(response => {
     if (response.ok) {
-      document.getElementById('m-success').style.display='block';
+      document.getElementById('m-success').style.display = 'block';
       // Clear inputs
       document.getElementById('m-name').value = '';
       document.getElementById('m-phone').value = '';
       setTimeout(() => {
         closeModal();
-        document.getElementById('m-success').style.display='none';
+        document.getElementById('m-success').style.display = 'none';
       }, 2800);
     } else {
       alert('Something went wrong. Please try again.');
     }
+  })
+  .then(() => {
+    // Sync counts in background if admin dashboard is open in another tab
   })
   .catch(err => {
     console.error('Error submitting enquiry:', err);
@@ -269,33 +292,38 @@ function submitModal(){
 }
 
 // ===== MESSAGING REDIRECTIONS =====
-function waEnquire(){
-  if(!currentProp) return;
-  const name=document.getElementById('m-name').value||'Customer';
-  const msg=`Hello Panvel Realty! Mera naam ${name} hai. Mujhe is property me interest hai:%0A%0A*${currentProp.name}*%0ALocation: ${currentProp.loc}%0APrice: ${currentProp.price}%0A%0APlease contact me.`;
-  window.open(`https://wa.me/919876543210?text=${msg}`,'_blank');
+function waEnquire() {
+  if (!currentProp) return;
+  const name = document.getElementById('m-name').value || 'Customer';
+  const msg = `Hello Panvel Realty! Mera naam ${name} hai. Mujhe is property me interest hai:%0A%0A*${currentProp.name}*%0ALocation: ${currentProp.loc}%0APrice: ${currentProp.price}%0A%0APlease contact me.`;
+  window.open(`https://wa.me/919326552977?text=${msg}`, '_blank');
 }
 
-function waQuick(id){
-  const p=props.find(x=>x.id===id);
-  if(!p) return;
-  const msg=`Hello Panvel Realty! Mujhe is property me interest hai:%0A*${p.name}*%0ALocation: ${p.loc}%0APrice: ${p.price}%0A%0APlease contact me.`;
-  window.open(`https://wa.me/919876543210?text=${msg}`,'_blank');
+function waQuick(id) {
+  const p = props.find(x => x.id === id);
+  if (!p) return;
+  const msg = `Hello Panvel Realty! Mujhe is property me interest hai:%0A*${p.name}*%0ALocation: ${p.loc}%0APrice: ${p.price}%0A%0APlease contact me.`;
+  window.open(`https://wa.me/919326552977?text=${msg}`, '_blank');
 }
 
-function callAgent(){window.location.href='tel:+919876543210';}
-
-function submitContact(){
-  const name=document.getElementById('c-name').value.trim();
-  const phone=document.getElementById('c-phone').value.trim();
-  if(!name||!phone){alert('Please fill name and phone number!');return;}
-  document.getElementById('contact-success').style.display='block';
-  setTimeout(()=>document.getElementById('contact-success').style.display='none',5000);
+function callAgent() {
+  window.location.href = 'tel:+919326552977';
 }
 
-function toggleNav(){
-  const n=document.getElementById('mob-nav');
-  if(n) n.classList.toggle('open');
+function submitContact() {
+  const name = document.getElementById('c-name').value.trim();
+  const phone = document.getElementById('c-phone').value.trim();
+  if (!name || !phone) {
+    alert('Please fill name and phone number!');
+    return;
+  }
+  document.getElementById('contact-success').style.display = 'block';
+  setTimeout(() => document.getElementById('contact-success').style.display = 'none', 5000);
+}
+
+function toggleNav() {
+  const n = document.getElementById('mob-nav');
+  if (n) n.classList.toggle('open');
 }
 
 // Initialize components if targets exist
@@ -318,13 +346,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const budgetEl = document.getElementById('s-budget');
       const kwEl = document.getElementById('s-kw');
 
-      if(typeEl && type) typeEl.value = type;
-      if(purposeEl && purpose) purposeEl.value = purpose;
-      if(budgetEl && budget) budgetEl.value = budget;
-      if(kwEl && kw) kwEl.value = kw;
+      if (typeEl && type) typeEl.value = type;
+      if (purposeEl && purpose) purposeEl.value = purpose;
+      if (budgetEl && budget) budgetEl.value = budget;
+      if (kwEl && kw) kwEl.value = kw;
 
       const grid = document.getElementById('prop-grid');
-      if(grid) {
+      if (grid) {
         filterProps();
       } else {
         renderProps(props);
@@ -335,7 +363,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
   const mOverlay = document.getElementById('modal');
-  if(mOverlay) {
-    mOverlay.addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+  if (mOverlay) {
+    mOverlay.addEventListener('click', function(e) { 
+      if (e.target === this) closeModal(); 
+    });
   }
 });

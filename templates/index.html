@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Panvel Realty — Kamothe, Navi Mumbai</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/CSS/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panvel Realty — Kamothe, Navi Mumbai</title>
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/static/CSS/style.css">
 </head>
 <body>
 
@@ -17,7 +19,7 @@
     <li><a href="/contact">Contact Us</a></li>
   </ul>
   <a href="/contact" class="nav-cta">Free Consultation</a>
-  <button class="nav-mob" onclick="toggleNav()">☰</button>
+  <button class="nav-mob" onclick="toggleNav()" aria-label="Toggle Navigation">☰</button>
 </nav>
 
 <div id="mob-nav">
@@ -32,7 +34,7 @@
   <div class="hero-dots"></div>
   <div class="hero-img"></div>
   <div class="hero-content">
-    <div class="hero-badge">✦ Kamothe, Navi Mumbai</div>
+    <div class="hero-badge"><i class="fa-solid fa-star" style="color: var(--gold); margin-right: 6px;"></i> Kamothe, Navi Mumbai</div>
     <h1>Find Your <em>Dream Property</em></h1>
     <p class="hero-sub">Panvel Realty — Kamothe ka sabse trusted real estate partner. Shops, plots, flats, buildings — kharidna ho ya rent lena ho — sab yahan milega.</p>
     <div class="hero-btns">
@@ -40,42 +42,81 @@
       <a href="/contact" class="btn-outline">Free Consultation</a>
     </div>
     <div class="hero-stats">
-      <div class="stat"><div class="stat-num">150+</div><div class="stat-lbl">Properties</div></div>
-      <div class="stat"><div class="stat-num">500+</div><div class="stat-lbl">Happy Clients</div></div>
-      <div class="stat"><div class="stat-num">12+</div><div class="stat-lbl">Years</div></div>
+      <div class="stat">
+        <div class="stat-num">150+</div>
+        <div class="stat-lbl">Properties</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">500+</div>
+        <div class="stat-lbl">Happy Clients</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">12+</div>
+        <div class="stat-lbl">Years Trust</div>
+      </div>
     </div>
   </div>
 </div>
 
 <div class="search-section">
   <div class="search-wrap">
-    <div class="search-label">🔍 Search <span>Properties</span> in Kamothe & Navi Mumbai</div>
+    <div class="search-label"><i class="fa-solid fa-magnifying-glass" style="color: var(--gold); margin-right: 8px;"></i> Search <span>Properties</span> in Kamothe & Navi Mumbai</div>
     <div class="search-box">
-      <div class="sf"><select id="s-type"><option value="">All Types</option><option value="flat">Flat / Apartment</option><option value="shop">Shop / Commercial</option><option value="plot">Plot / Land</option></select></div>
+      <div class="sf">
+        <select id="s-type">
+          <option value="">All Types</option>
+          <option value="flat">Flat / Apartment</option>
+          <option value="shop">Shop / Commercial</option>
+          <option value="plot">Plot / Land</option>
+        </select>
+      </div>
       <div class="sdiv"></div>
-      <div class="sf"><select id="s-purpose"><option value="">Buy or Rent</option><option value="buy">Buy</option><option value="rent">Rent</option></select></div>
+      <div class="sf">
+        <select id="s-purpose">
+          <option value="">Buy or Rent</option>
+          <option value="buy">Buy</option>
+          <option value="rent">Rent</option>
+        </select>
+      </div>
       <div class="sdiv"></div>
-      <div class="sf"><select id="s-budget"><option value="">Any Budget</option><option value="25">Under ₹25 Lakh</option><option value="50">Under ₹50 Lakh</option><option value="100">Under ₹1 Crore</option><option value="999">Above ₹1 Crore</option></select></div>
-      <button class="sbtn" onclick="filterProps()">Search →</button>
+      <div class="sf">
+        <select id="s-budget">
+          <option value="">Any Budget</option>
+          <option value="25">Under ₹25 Lakh</option>
+          <option value="50">Under ₹50 Lakh</option>
+          <option value="100">Under ₹1 Crore</option>
+          <option value="999">Above ₹1 Crore</option>
+        </select>
+      </div>
+      <button class="sbtn" onclick="filterProps()">Search <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i></button>
     </div>
   </div>
 </div>
 
-<section id="about" style="background:var(--purple-light);padding:76px 5%;">
-  <div style="max-width:1160px;margin:0 auto;">
+<section id="about" style="background: var(--purple-light);">
+  <div class="main">
     <div class="about-wrap">
       <div class="about-inner">
         <div class="about-img-side">
           <img src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=700&q=80" alt="Corporate Office">
-          <div class="about-exp-box"><div class="about-exp-num">12+</div><div class="about-exp-lbl">Years of Trust</div></div>
+          <div class="about-exp-box">
+            <div class="about-exp-num">12+</div>
+            <div class="about-exp-lbl">Years of Trust</div>
+          </div>
         </div>
         <div class="about-content">
           <div class="sec-tag">✦ Who We Are</div>
-          <h2 class="sec-title" style="color:#fff;">Kamothe Ka Sabse <span style="color:var(--gold)">Trusted</span> Partner</h2>
-          <p class="sec-sub">Panvel Realty 12+ saalon se Kamothe aur Navi Mumbai ke logon ki property zarooraten poori kar raha hai.</p>
+          <h2 class="sec-title" style="color: #fff;">Kamothe Ka Sabse <span>Trusted</span> Partner</h2>
+          <p class="sec-sub" style="color: rgba(255,255,255,0.7); margin-bottom: 24px;">Panvel Realty 12+ saalon se Kamothe aur Navi Mumbai ke logon ki property zarooraten poori kar raha hai.</p>
           <div class="about-pts">
-            <div class="apt"><div class="apt-title">✅ RERA Certified</div><div class="apt-sub">Sab properties legally verified</div></div>
-            <div class="apt"><div class="apt-title">🤝 Zero Hidden Charges</div><div class="apt-sub">100% transparent pricing</div></div>
+            <div class="apt">
+              <div class="apt-title"><i class="fa-solid fa-circle-check" style="color: var(--gold); margin-right: 6px;"></i> RERA Certified</div>
+              <div class="apt-sub">Sab properties legally verified aur clear title hain.</div>
+            </div>
+            <div class="apt">
+              <div class="apt-title"><i class="fa-solid fa-circle-check" style="color: var(--gold); margin-right: 6px;"></i> Zero Hidden Charges</div>
+              <div class="apt-sub">100% transparent documentation aur deal processes.</div>
+            </div>
           </div>
         </div>
       </div>
@@ -85,34 +126,106 @@
 
 <section id="amenities">
   <div class="main">
-    <div style="text-align:center;max-width:600px;margin:0 auto;">
+    <div style="text-align:center; max-width:600px; margin:0 auto;">
       <div class="sec-tag">✦ Why Kamothe?</div>
       <h2 class="sec-title">World-Class <span>Amenities</span></h2>
       <div class="sec-div" style="margin:18px auto;"></div>
     </div>
     <div class="amen-grid">
-      <div class="amen-card"><div class="amen-icon">🚇</div><div class="amen-name">Metro Connectivity</div></div>
-      <div class="amen-card"><div class="amen-icon">🏫</div><div class="amen-name">Top Schools</div></div>
-      <div class="amen-card"><div class="amen-icon">🏥</div><div class="amen-name">Hospitals</div></div>
-      <div class="amen-card"><div class="amen-icon">✈️</div><div class="amen-name">Near New Airport</div></div>
+      <div class="amen-card">
+        <div class="amen-icon">🚇</div>
+        <div class="amen-name">Metro Connectivity</div>
+      </div>
+      <div class="amen-card">
+        <div class="amen-icon">🏫</div>
+        <div class="amen-name">Top Schools</div>
+      </div>
+      <div class="amen-card">
+        <div class="amen-icon">🏥</div>
+        <div class="amen-name">Hospitals</div>
+      </div>
+      <div class="amen-card">
+        <div class="amen-icon">✈️</div>
+        <div class="amen-name">Near New Airport</div>
+      </div>
     </div>
   </div>
 </section>
 
 <section id="testimonials" class="testi-section">
   <div class="main">
-    <div class="sec-tag">✦ Client Stories</div>
-    <h2 class="sec-title">What Our <span>Clients Say</span></h2>
-    <div class="sec-div"></div>
+    <div style="text-align: center; max-width: 600px; margin: 0 auto 36px;">
+      <div class="sec-tag">✦ Client Stories</div>
+      <h2 class="sec-title">What Our <span>Clients Say</span></h2>
+      <div class="sec-div" style="margin:18px auto;"></div>
+    </div>
     <div class="testi-grid">
-      <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-text">"Panvel Realty ne mujhe Kamothe me perfect 2BHK flat dilaya. Rajesh bhai ne poora process ekdum smooth banaya."</p><div class="testi-author"><div class="testi-av">MK</div><div><div class="testi-name">Mahesh Kulkarni</div><div class="testi-loc">Sector 7, Kamothe</div></div></div></div>
-      <div class="testi-card"><div class="testi-stars">★★★★★</div><p class="testi-text">"Commercial shop lena tha — Amit bhai ne 3 options dikhaye aur best deal karwaya. Highly recommend!"</p><div class="testi-author"><div class="testi-av">SP</div><div><div class="testi-name">Suresh Pawar</div><div class="testi-loc">Sector 12, Kamothe</div></div></div></div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Panvel Realty ne mujhe Kamothe me perfect 2BHK flat dilaya. Rajesh bhai ne poora process ekdum smooth banaya."</p>
+        <div class="testi-author">
+          <div class="testi-av">MK</div>
+          <div>
+            <div class="testi-name">Mahesh Kulkarni</div>
+            <div class="testi-loc">Sector 7, Kamothe</div>
+          </div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">"Commercial shop lena tha — Amit bhai ne 3 options dikhaye aur best deal karwaya. Highly recommend!"</p>
+        <div class="testi-author">
+          <div class="testi-av">SP</div>
+          <div>
+            <div class="testi-name">Suresh Pawar</div>
+            <div class="testi-loc">Sector 12, Kamothe</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
 <footer>
   <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="fcol">
+        <a href="/" class="flogo">Panvel <span>Realty</span></a>
+        <p class="fdesc">Kamothe and Navi Mumbai's most trusted partner for residential, commercial, plots and rental properties. Certified agents at your service.</p>
+        <div class="fsocials">
+          <a href="#" class="fsoc" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+          <a href="#" class="fsoc" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+          <a href="https://wa.me/919326552977" class="fsoc" target="_blank" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+        </div>
+      </div>
+      <div class="fcol">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/properties">Browse Properties</a></li>
+          <li><a href="/contact">Contact Us</a></li>
+          <li><a href="/admin/login">Admin Portal</a></li>
+        </ul>
+      </div>
+      <div class="fcol">
+        <h4>Categories</h4>
+        <ul>
+          <li><a href="/properties?type=flat">Flats & Apartments</a></li>
+          <li><a href="/properties?type=shop">Commercial Shops</a></li>
+          <li><a href="/properties?type=plot">Plots & Lands</a></li>
+          <li><a href="/properties?type=office">Office Spaces</a></li>
+        </ul>
+      </div>
+      <div class="fcol">
+        <h4>Contact Us</h4>
+        <ul style="color: rgba(255,255,255,0.45); font-size: 13px; gap: 14px;">
+          <li><i class="fa-solid fa-location-dot" style="color: var(--gold); margin-right: 8px;"></i> Sector 7, Kamothe, Navi Mumbai - 410209</li>
+          <li><i class="fa-solid fa-phone" style="color: var(--gold); margin-right: 8px;"></i> +91 93265 52977</li>
+          <li><i class="fa-solid fa-envelope" style="color: var(--gold); margin-right: 8px;"></i> info@panvelrealty.com</li>
+        </ul>
+      </div>
+    </div>
+    
     <div class="fbot">
       <p>© 2026 Panvel Realty. All rights reserved. | Kamothe, Navi Mumbai</p>
       <p>Made with ❤️ for Navi Mumbai</p>
@@ -120,7 +233,9 @@
   </div>
 </footer>
 
-<a href="https://wa.me/919876543210" class="wa-float" target="_blank">💬</a>
+<a href="https://wa.me/919326552977" class="wa-float" target="_blank" aria-label="Chat on WhatsApp">
+  <i class="fa-brands fa-whatsapp"></i>
+</a>
 
 <script src="/static/JS/main.js"></script>
 </body>

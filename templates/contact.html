@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact Us — Panvel Realty</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="/static/CSS/style.css">
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='CSS/style.css') }}">
 </head>
-
 <body>
 
   <nav>
@@ -21,7 +19,7 @@
       <li><a href="/contact" class="active">Contact Us</a></li>
     </ul>
     <a href="/contact" class="nav-cta">Free Consultation</a>
-    <button class="nav-mob" onclick="toggleNav()">☰</button>
+    <button class="nav-mob" onclick="toggleNav()" aria-label="Toggle Navigation">☰</button>
   </nav>
 
   <div id="mob-nav">
@@ -31,55 +29,55 @@
     <a href="/contact" class="btn-gold" style="text-align:center;" onclick="toggleNav()">Free Consultation</a>
   </div>
 
-  <section id="contact" class="contact-section" style="padding:100px 5% 76px;">
-    <div style="max-width:1160px;margin:0 auto;">
+  <section id="contact" class="contact-section" style="padding: 110px 8% 96px;">
+    <div class="main">
       <div class="contact-grid">
 
         <div>
           <div class="sec-tag">✦ Get In Touch</div>
-          <h2 class="sec-title" style="color:#fff;">Let's Find Your <span style="color:var(--gold)">Perfect
-              Property</span></h2>
+          <h2 class="sec-title" style="color:#fff;">Let's Find Your <span style="color:var(--gold)">Perfect Property</span></h2>
           <div class="sec-div"></div>
-          <p style="font-size:14px;color:rgba(255,255,255,0.5);line-height:1.75;margin-bottom:32px;font-weight:300;">Buy
-            ho ya sell, rent ho ya invest — hamare expert agents hamesha ready hain. Seedha call karo ya form bharo!</p>
+          <p style="font-size:15px; color:rgba(255,255,255,0.6); line-height:1.8; margin-bottom:40px; font-weight:400;">
+            Buy ho ya sell, rent ho ya invest — hamare expert agents hamesha ready hain. Seedha call karo ya form bharo!
+          </p>
 
           <div class="contact-info">
             <div class="ci-item">
-              <div class="ci-icon">📍</div>
+              <div class="ci-icon" style="color: var(--gold);"><i class="fa-solid fa-location-dot"></i></div>
               <div>
                 <div class="ci-label">Address</div>
                 <div class="ci-value">Sector 7, Kamothe,<br>Navi Mumbai – 410209</div>
               </div>
             </div>
             <div class="ci-item">
-              <div class="ci-icon">📞</div>
+              <div class="ci-icon" style="color: var(--gold);"><i class="fa-solid fa-phone"></i></div>
               <div>
                 <div class="ci-label">Phone</div>
-                <div class="ci-value"><a href="tel:+919326552977" class="ci-link"
-                    style="color:var(--gold); text-decoration:none;">+91 93265 52977</a><br><a href="tel:+919326552977"
-                    class="ci-link" style="color:var(--gold); text-decoration:none;">+91 93265 52977</a></div>
+                <div class="ci-value">
+                  <a href="tel:+919326552977" class="ci-link">+91 93265 52977</a>
+                </div>
               </div>
             </div>
             <div class="ci-item">
-              <div class="ci-icon">✉️</div>
+              <div class="ci-icon" style="color: var(--gold);"><i class="fa-solid fa-envelope"></i></div>
               <div>
                 <div class="ci-label">Email</div>
-                <div class="ci-value"><a href="mailto:info@panvelrealty.com" class="ci-link"
-                    style="color:var(--gold); text-decoration:none;">info@panvelrealty.com</a></div>
+                <div class="ci-value">
+                  <a href="mailto:info@panvelrealty.com" class="ci-link">info@panvelrealty.com</a>
+                </div>
               </div>
             </div>
             <div class="ci-item">
-              <div class="ci-icon">💬</div>
+              <div class="ci-icon" style="color: var(--gold);"><i class="fa-brands fa-whatsapp"></i></div>
               <div>
                 <div class="ci-label">WhatsApp</div>
-                <div class="ci-value"><a
-                    href="https://wa.me/919326552977?text=Hello%20Panvel%20Realty%2C%20property%20enquiry%20karni%20thi"
-                    target="_blank" class="ci-link" style="color:var(--gold); text-decoration:none;">Chat on WhatsApp
-                    →</a></div>
+                <div class="ci-value">
+                  <a href="https://wa.me/919326552977?text=Hello%20Panvel%20Realty%2C%20property%20enquiry%20karni%20thi" target="_blank" class="ci-link">Chat on WhatsApp →</a>
+                </div>
               </div>
             </div>
             <div class="ci-item">
-              <div class="ci-icon">🕐</div>
+              <div class="ci-icon" style="color: var(--gold);"><i class="fa-regular fa-clock"></i></div>
               <div>
                 <div class="ci-label">Office Hours</div>
                 <div class="ci-value">Mon–Sat: 9:00 AM – 7:00 PM<br>Sunday: 10:00 AM – 4:00 PM</div>
@@ -91,7 +89,7 @@
         <form class="cform" action="/submit-enquiry" method="POST">
           <div class="cform-title">Free Consultation</div>
           <div class="cform-sub">Hamare expert se baat karo — bilkul free!</div>
-          
+
           <div class="fg-row">
             <div class="fg">
               <label for="c-name">Your Name</label>
@@ -102,12 +100,12 @@
               <input type="tel" id="c-phone" name="phone" required placeholder="+91 XXXXX XXXXX">
             </div>
           </div>
-          
+
           <div class="fg">
             <label for="c-email">Email Address</label>
             <input type="email" id="c-email" name="email" placeholder="yourname@email.com">
           </div>
-          
+
           <div class="fg-row">
             <div class="fg">
               <label for="c-looking">Looking For</label>
@@ -129,7 +127,7 @@
               </select>
             </div>
           </div>
-          
+
           <div class="fg">
             <label for="c-budget">Budget Range</label>
             <select id="c-budget" name="budget">
@@ -140,16 +138,18 @@
               <option>Above ₹1 Crore</option>
             </select>
           </div>
-          
+
           <div class="fg">
             <label for="c-msg">Message</label>
             <textarea id="c-msg" name="message" placeholder="Koi specific requirement hai toh yahan likhein..."></textarea>
           </div>
-          
-          <button type="submit" class="fsub">Send Enquiry →</button>
-          
+
+          <button type="submit" class="fsub">Send Enquiry <i class="fa-solid fa-paper-plane" style="margin-left: 6px;"></i></button>
+
           {% if request.args.get('success') %}
-            <div class="fsuccess" style="display:block;">✅ Shukriya! Hamara agent 24 ghante me aapse contact karega.</div>
+          <div class="fsuccess" style="display:block;">
+            <i class="fa-solid fa-circle-check" style="margin-right: 6px;"></i> Shukriya! Hamara agent 24 ghante me aapse contact karega.
+          </div>
           {% endif %}
         </form>
 
@@ -159,6 +159,44 @@
 
   <footer>
     <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="fcol">
+          <a href="/" class="flogo">Panvel <span>Realty</span></a>
+          <p class="fdesc">Kamothe and Navi Mumbai's most trusted partner for residential, commercial, plots and rental properties. Certified agents at your service.</p>
+          <div class="fsocials">
+            <a href="#" class="fsoc" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" class="fsoc" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://wa.me/919326552977" class="fsoc" target="_blank" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+        <div class="fcol">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/properties">Browse Properties</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="/admin/login">Admin Portal</a></li>
+          </ul>
+        </div>
+        <div class="fcol">
+          <h4>Categories</h4>
+          <ul>
+            <li><a href="/properties?type=flat">Flats & Apartments</a></li>
+            <li><a href="/properties?type=shop">Commercial Shops</a></li>
+            <li><a href="/properties?type=plot">Plots & Lands</a></li>
+            <li><a href="/properties?type=office">Office Spaces</a></li>
+          </ul>
+        </div>
+        <div class="fcol">
+          <h4>Contact Us</h4>
+          <ul style="color: rgba(255,255,255,0.45); font-size: 13px; gap: 14px;">
+            <li><i class="fa-solid fa-location-dot" style="color: var(--gold); margin-right: 8px;"></i> Sector 7, Kamothe, Navi Mumbai - 410209</li>
+            <li><i class="fa-solid fa-phone" style="color: var(--gold); margin-right: 8px;"></i> +91 93265 52977</li>
+            <li><i class="fa-solid fa-envelope" style="color: var(--gold); margin-right: 8px;"></i> info@panvelrealty.com</li>
+          </ul>
+        </div>
+      </div>
+      
       <div class="fbot">
         <p>© 2026 Panvel Realty. All rights reserved. | Kamothe, Navi Mumbai</p>
         <p>Made with ❤️ for Navi Mumbai</p>
@@ -166,7 +204,10 @@
     </div>
   </footer>
 
-  <script src="/static/JS/main.js"></script>
-</body>
+  <a href="https://wa.me/919326552977" class="wa-float" target="_blank" aria-label="Chat on WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
 
+  <script src="{{ url_for('static', filename='JS/main.js') }}"></script>
+</body>
 </html>

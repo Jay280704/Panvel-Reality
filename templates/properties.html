@@ -1,16 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>All Properties — Panvel Realty</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
-    rel="stylesheet">
+  <!-- Google Fonts & FontAwesome Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="/static/CSS/style.css">
 </head>
-
 <body>
 
   <nav>
@@ -21,7 +19,7 @@
       <li><a href="/contact">Contact Us</a></li>
     </ul>
     <a href="/contact" class="nav-cta">Free Consultation</a>
-    <button class="nav-mob" onclick="toggleNav()">☰</button>
+    <button class="nav-mob" onclick="toggleNav()" aria-label="Toggle Navigation">☰</button>
   </nav>
 
   <div id="mob-nav">
@@ -33,34 +31,42 @@
 
   <div class="search-section" style="margin-top: 20px;">
     <div class="search-wrap">
-      <div class="search-label">🔍 Filter <span>Properties</span> Dynamically</div>
+      <div class="search-label"><i class="fa-solid fa-sliders" style="color: var(--gold); margin-right: 8px;"></i> Filter <span>Properties</span> Dynamically</div>
       <div class="search-box">
-        <div class="sf"><select id="s-type" onchange="filterProps()">
+        <div class="sf">
+          <select id="s-type" onchange="filterProps()">
             <option value="">All Types</option>
             <option value="flat">Flat / Apartment</option>
             <option value="shop">Shop / Commercial</option>
             <option value="plot">Plot / Land</option>
             <option value="building">Building</option>
             <option value="office">Office Space</option>
-          </select></div>
+          </select>
+        </div>
         <div class="sdiv"></div>
-        <div class="sf"><select id="s-purpose" onchange="filterProps()">
+        <div class="sf">
+          <select id="s-purpose" onchange="filterProps()">
             <option value="">Buy or Rent</option>
             <option value="buy">Buy</option>
             <option value="rent">Rent</option>
-          </select></div>
+          </select>
+        </div>
         <div class="sdiv"></div>
-        <div class="sf"><select id="s-budget" onchange="filterProps()">
+        <div class="sf">
+          <select id="s-budget" onchange="filterProps()">
             <option value="">Any Budget</option>
             <option value="10">Under ₹10 Lakh</option>
             <option value="25">Under ₹25 Lakh</option>
             <option value="50">Under ₹50 Lakh</option>
             <option value="100">Under ₹1 Crore</option>
             <option value="999">Above ₹1 Crore</option>
-          </select></div>
+          </select>
+        </div>
         <div class="sdiv"></div>
-        <div class="sf"><input type="text" id="s-kw" placeholder="Location, keyword..." oninput="filterProps()"></div>
-        <button class="sbtn" onclick="filterProps()">Search →</button>
+        <div class="sf" style="flex: 1.2;">
+          <input type="text" id="s-kw" placeholder="Search by location, sector..." oninput="filterProps()">
+        </div>
+        <button class="sbtn" onclick="filterProps()">Search <i class="fa-solid fa-arrow-right" style="margin-left: 6px;"></i></button>
       </div>
     </div>
   </div>
@@ -73,7 +79,7 @@
       <p class="sec-sub">Kamothe aur Navi Mumbai ke best verified properties — buy ya rent dono available.</p>
 
       <div class="ftabs" style="margin-top:28px;">
-        <button class="ftab active" onclick="setTab(this,'all')">All</button>
+        <button class="ftab active" onclick="setTab(this,'all')">All Listings</button>
         <button class="ftab" onclick="setTab(this,'buy')">Buy</button>
         <button class="ftab" onclick="setTab(this,'rent')">Rent</button>
         <button class="ftab" onclick="setTab(this,'flat')">Flats</button>
@@ -83,14 +89,17 @@
       </div>
 
       <div class="prop-grid" id="prop-grid"></div>
-      <div id="no-res" style="display:none;text-align:center;padding:48px;color:var(--muted);font-size:14px;">No
-        properties found. Try different filters.</div>
+      <div id="no-res" style="display:none;text-align:center;padding:80px;color:var(--muted);font-size:15px; font-weight:500;">
+        <i class="fa-regular fa-face-frown" style="font-size: 32px; color: var(--gold); margin-bottom: 12px; display: block;"></i>
+        No properties found. Try matching different filters.
+      </div>
     </div>
   </section>
 
+  <!-- Detailed Property Modal -->
   <div class="modal-overlay" id="modal">
     <div class="modal">
-      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button class="modal-close" onclick="closeModal()" aria-label="Close Modal">✕</button>
       
       <!-- Carousel Container -->
       <div class="modal-carousel-container">
@@ -99,8 +108,8 @@
         </div>
         
         <!-- Controls -->
-        <button class="carousel-prev" onclick="moveSlide(-1)">❮</button>
-        <button class="carousel-next" onclick="moveSlide(1)">❯</button>
+        <button class="carousel-prev" onclick="moveSlide(-1)" aria-label="Previous Slide">❮</button>
+        <button class="carousel-next" onclick="moveSlide(1)" aria-label="Next Slide">❯</button>
         
         <!-- Indicators -->
         <div class="carousel-dots" id="carousel-dots"></div>
@@ -111,23 +120,72 @@
       
       <div class="modal-title" id="m-title"></div>
       <div class="modal-price" id="m-price"></div>
-      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;" id="m-feats"></div>
-      <div class="mfg"><label for="m-name">Your Name *</label><input type="text" id="m-name" placeholder="Aapka naam">
+      <div style="display:flex; gap:8px; margin-bottom:24px; flex-wrap:wrap;" id="m-feats"></div>
+      
+      <!-- Enquiry Form -->
+      <div class="mfg">
+        <label for="m-name">Your Name *</label>
+        <input type="text" id="m-name" placeholder="Enter your full name">
       </div>
-      <div class="mfg"><label for="m-phone">Phone Number *</label><input type="tel" id="m-phone"
-          placeholder="+91 XXXXX XXXXX"></div>
-      <div class="mfg"><label for="m-msg">Message</label><textarea id="m-msg"
-          placeholder="Koi specific sawaal?"></textarea></div>
+      <div class="mfg">
+        <label for="m-phone">Phone Number *</label>
+        <input type="tel" id="m-phone" placeholder="+91 XXXXX XXXXX">
+      </div>
+      <div class="mfg">
+        <label for="m-msg">Message</label>
+        <textarea id="m-msg" placeholder="Tell us about your requirements..."></textarea>
+      </div>
+      
       <div class="modal-btns">
-        <button class="mbtn-sub" onclick="submitModal()">Send Enquiry</button>
-        <button class="mbtn-wa" id="m-wa-btn" onclick="waEnquire()">💬 WhatsApp</button>
+        <button class="mbtn-sub" onclick="submitModal()">Send Enquiry <i class="fa-solid fa-paper-plane" style="margin-left: 6px;"></i></button>
+        <button class="mbtn-wa" id="m-wa-btn" onclick="waEnquire()"><i class="fa-brands fa-whatsapp" style="margin-right: 6px; font-size:15px; color:#25D366;"></i> WhatsApp</button>
       </div>
-      <div class="modal-success" id="m-success">✅ Enquiry bheji! Agent jald baat karega.</div>
+      <div class="modal-success" id="m-success">
+        <i class="fa-solid fa-circle-check" style="margin-right: 6px;"></i> Enquiry sent successfully! Our agent will contact you shortly.
+      </div>
     </div>
   </div>
 
   <footer>
     <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="fcol">
+          <a href="/" class="flogo">Panvel <span>Realty</span></a>
+          <p class="fdesc">Kamothe and Navi Mumbai's most trusted partner for residential, commercial, plots and rental properties. Certified agents at your service.</p>
+          <div class="fsocials">
+            <a href="#" class="fsoc" aria-label="Facebook"><i class="fa-brands fa-facebook-f"></i></a>
+            <a href="#" class="fsoc" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+            <a href="https://wa.me/919326552977" class="fsoc" target="_blank" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+          </div>
+        </div>
+        <div class="fcol">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/properties">Browse Properties</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+            <li><a href="/admin/login">Admin Portal</a></li>
+          </ul>
+        </div>
+        <div class="fcol">
+          <h4>Categories</h4>
+          <ul>
+            <li><a href="/properties?type=flat">Flats & Apartments</a></li>
+            <li><a href="/properties?type=shop">Commercial Shops</a></li>
+            <li><a href="/properties?type=plot">Plots & Lands</a></li>
+            <li><a href="/properties?type=office">Office Spaces</a></li>
+          </ul>
+        </div>
+        <div class="fcol">
+          <h4>Contact Us</h4>
+          <ul style="color: rgba(255,255,255,0.45); font-size: 13px; gap: 14px;">
+            <li><i class="fa-solid fa-location-dot" style="color: var(--gold); margin-right: 8px;"></i> Sector 7, Kamothe, Navi Mumbai - 410209</li>
+            <li><i class="fa-solid fa-phone" style="color: var(--gold); margin-right: 8px;"></i> +91 93265 52977</li>
+            <li><i class="fa-solid fa-envelope" style="color: var(--gold); margin-right: 8px;"></i> info@panvelrealty.com</li>
+          </ul>
+        </div>
+      </div>
+      
       <div class="fbot">
         <p>© 2026 Panvel Realty. All rights reserved. | Kamothe, Navi Mumbai</p>
         <p>Made with ❤️ for Navi Mumbai</p>
@@ -135,7 +193,10 @@
     </div>
   </footer>
 
+  <a href="https://wa.me/919326552977" class="wa-float" target="_blank" aria-label="Chat on WhatsApp">
+    <i class="fa-brands fa-whatsapp"></i>
+  </a>
+
   <script src="/static/JS/main.js"></script>
 </body>
-
 </html>
