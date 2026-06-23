@@ -3,10 +3,23 @@ import pymysql
 import os
 from werkzeug.utils import secure_filename
 from functools import wraps
+from flask_wtf.csrf import CSRFProtect
 
 app = Flask(__name__)
-app.secret_key = "panvel_realty_secret_key"
+
+# Load secret key from environment variable, falling back to a default dev key
+app.secret_key = os.environ.get('SECRET_KEY') or os.environ.get('FLASK_SECRET_KEY') or "panvel_realty_secret_key_dev_fallback_123"
+
 app.config['SESSION_PERMANENT'] = False
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+
+# Set secure session cookie only in non-debug mode (local dev runs over HTTP)
+app.config['SESSION_COOKIE_SECURE'] = not (os.environ.get('FLASK_DEBUG', 'False').lower() == 'true')
+
+# Initialize CSRF Protection
+csrf = CSRFProtect(app)
+
 
 import bcrypt
 
@@ -32,6 +45,11 @@ def admin_required(f):
 UPLOAD_FOLDER = os.path.join('static', 'uploads')
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 # ===== PURE PYTHON MYSQL CONNECTION =====
 def get_db_connection():
@@ -224,19 +242,25 @@ def init_db():
         conn.commit()
 
         # Seed default admin user if 'admin' does not exist
-        cur.execute("SELECT COUNT(*) FROM admin_users WHERE username = %s", ("admin",))
+        default_admin_user = os.environ.get('DEFAULT_ADMIN_USER', 'admin')
+        default_admin_pass = os.environ.get('DEFAULT_ADMIN_PASS', 'admin123')
+        default_admin_answer = os.environ.get('DEFAULT_ADMIN_ANSWER', 'panvelrealty')
+
+        cur.execute("SELECT COUNT(*) FROM admin_users WHERE username = %s", (default_admin_user,))
         admin_exists = cur.fetchone()[0] > 0
         if not admin_exists:
-            h_password = hash_password("admin123")
-            h_answer = hash_password("panvelrealty")
+            h_password = hash_password(default_admin_pass)
+            h_answer = hash_password(default_admin_answer.strip().lower())
             cur.execute("""
                 INSERT INTO admin_users (username, password, role, security_question, security_answer)
                 VALUES (%s, %s, %s, %s, %s)
-            """, ("admin", h_password, "main_admin", "What is your default recovery key?", h_answer))
+            """, (default_admin_user, h_password, "main_admin", "What is your default recovery key?", h_answer))
             conn.commit()
-            print("Default admin user 'admin' seeded successfully.")
+            print(f"Default admin user '{default_admin_user}' seeded successfully.")
+            if default_admin_pass == "admin123":
+                print("WARNING: Default admin password 'admin123' is used. Please change it via DEFAULT_ADMIN_PASS in production!")
         else:
-            cur.execute("UPDATE admin_users SET role = 'main_admin' WHERE username = 'admin'")
+            cur.execute("UPDATE admin_users SET role = 'main_admin' WHERE username = %s", (default_admin_user,))
             conn.commit()
 
         cur.close()
@@ -388,6 +412,7 @@ def forgot_password():
 
 # ===== SUBMIT ENQUIRY LOGIC =====
 @app.route('/submit-enquiry', methods=['POST'])
+@csrf.exempt
 def submit_enquiry():
     if request.method == 'POST':
         name = request.form.get('name')
@@ -637,6 +662,8 @@ def add_property():
         # Handle file upload
         if 'img_file' in request.files and request.files['img_file'].filename != '':
             file = request.files['img_file']
+            if not allowed_file(file.filename):
+                return "Error: Invalid main image format. Allowed formats: PNG, JPG, JPEG, GIF, WEBP", 400
             filename = secure_filename(file.filename)
             import time
             unique_filename = f"{int(time.time())}_{filename}"
@@ -661,6 +688,8 @@ def add_property():
             files = request.files.getlist('property_images')
             for file in files:
                 if file.filename != '':
+                    if not allowed_file(file.filename):
+                        return "Error: Invalid additional image format. Allowed formats: PNG, JPG, JPEG, GIF, WEBP", 400
                     filename = secure_filename(file.filename)
                     import time
                     import random
@@ -707,6 +736,8 @@ def edit_property():
         # Handle file upload
         if 'img_file' in request.files and request.files['img_file'].filename != '':
             file = request.files['img_file']
+            if not allowed_file(file.filename):
+                return "Error: Invalid main image format. Allowed formats: PNG, JPG, JPEG, GIF, WEBP", 400
             filename = secure_filename(file.filename)
             import time
             unique_filename = f"{int(time.time())}_{filename}"
@@ -748,6 +779,8 @@ def edit_property():
             files = request.files.getlist('property_images')
             for file in files:
                 if file.filename != '':
+                    if not allowed_file(file.filename):
+                        return "Error: Invalid additional image format. Allowed formats: PNG, JPG, JPEG, GIF, WEBP", 400
                     filename = secure_filename(file.filename)
                     import time
                     import random
@@ -837,8 +870,17 @@ def delete_property(id):
     except Exception as e:
         return {"error": str(e)}, 500
 
+@app.after_request
+def add_security_headers(response):
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    return response
+
 # Initialize database on module import (needed for Render / Gunicorn)
 init_db()
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # Default debug mode to False for safety in production unless explicitly set to True
+    is_debug = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    app.run(debug=is_debug)

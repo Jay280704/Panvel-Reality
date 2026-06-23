@@ -4,6 +4,17 @@ let props = [];
 let activeTab = 'all';
 let currentProp = null;
 
+// HTML Escaping Utility to prevent XSS
+function escapeHTML(str) {
+  if (!str) return '';
+  return str.toString()
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 // ===== CORE ENGINE HANDLERS =====
 function renderProps(list) {
   const g = document.getElementById('prop-grid');
@@ -19,21 +30,21 @@ function renderProps(list) {
   g.innerHTML = list.map(p => `
     <div class="prop-card">
       <div class="prop-img-wrap">
-        <img src="${p.img}" alt="${p.name}" loading="lazy">
-        <span class="pbadge ${p.purpose === 'rent' ? 'rent' : ''}">${p.badge}</span>
-        <span class="ptype">${p.type.charAt(0).toUpperCase() + p.type.slice(1)}</span>
+        <img src="${escapeHTML(p.img)}" alt="${escapeHTML(p.name)}" loading="lazy">
+        <span class="pbadge ${p.purpose === 'rent' ? 'rent' : ''}">${escapeHTML(p.badge)}</span>
+        <span class="ptype">${escapeHTML(p.type.charAt(0).toUpperCase() + p.type.slice(1))}</span>
       </div>
       <div class="prop-body">
-        <div class="prop-price">${p.price}</div>
-        <div class="prop-name">${p.name}</div>
+        <div class="prop-price">${escapeHTML(p.price)}</div>
+        <div class="prop-name">${escapeHTML(p.name)}</div>
         <div class="prop-loc">
-          <i class="fa-solid fa-location-dot" style="color: var(--gold); margin-right: 6px;"></i> ${p.loc}
+          <i class="fa-solid fa-location-dot" style="color: var(--gold); margin-right: 6px;"></i> ${escapeHTML(p.loc)}
         </div>
         <div class="prop-feats">
-          ${p.area !== '—' ? `<div class="pfeat"><i class="fa-solid fa-expand" style="color: var(--purple-mid); margin-right: 4px;"></i> <strong>${p.area}</strong></div>` : ''}
-          ${p.beds !== '—' ? `<div class="pfeat"><i class="fa-solid fa-bed" style="color: var(--purple-mid); margin-right: 4px;"></i> <strong>${p.beds}</strong></div>` : ''}
-          ${p.bath !== '—' ? `<div class="pfeat"><i class="fa-solid fa-bath" style="color: var(--purple-mid); margin-right: 4px;"></i> <strong>${p.bath} Bath</strong></div>` : ''}
-          ${p.parking !== '—' ? `<div class="pfeat"><i class="fa-solid fa-car" style="color: var(--purple-mid); margin-right: 4px;"></i> <strong>${p.parking}P</strong></div>` : ''}
+          ${p.area !== '—' ? `<div class="pfeat"><i class="fa-solid fa-expand" style="color: var(--purple-mid); margin-right: 4px;"></i> <strong>${escapeHTML(p.area)}</strong></div>` : ''}
+          ${p.beds !== '—' ? `<div class="pfeat"><i class="fa-solid fa-bed" style="color: var(--purple-mid); margin-right: 4px;"></i> <strong>${escapeHTML(p.beds)}</strong></div>` : ''}
+          ${p.bath !== '—' ? `<div class="pfeat"><i class="fa-solid fa-bath" style="color: var(--purple-mid); margin-right: 4px;"></i> <strong>${escapeHTML(p.bath)} Bath</strong></div>` : ''}
+          ${p.parking !== '—' ? `<div class="pfeat"><i class="fa-solid fa-car" style="color: var(--purple-mid); margin-right: 4px;"></i> <strong>${escapeHTML(p.parking)}P</strong></div>` : ''}
         </div>
         <div class="prop-btns">
           <button class="pbtn-enquire" onclick="openModal(${p.id})">Enquire Now <i class="fa-solid fa-arrow-right" style="margin-left: 4px;"></i></button>
@@ -119,7 +130,7 @@ function openModal(id) {
   if (wrapper) {
     wrapper.innerHTML = carouselImages.map(img => `
       <div class="modal-slide">
-        <img src="${img}" alt="${p.name}">
+        <img src="${escapeHTML(img)}" alt="${escapeHTML(p.name)}">
       </div>
     `).join('');
   }
@@ -136,7 +147,7 @@ function openModal(id) {
   const thumbsContainer = document.getElementById('carousel-thumbs');
   if (thumbsContainer) {
     thumbsContainer.innerHTML = carouselImages.map((img, idx) => `
-      <img class="carousel-thumb ${idx === 0 ? 'active' : ''}" src="${img}" alt="Thumb ${idx}" onclick="goToSlide(${idx})">
+      <img class="carousel-thumb ${idx === 0 ? 'active' : ''}" src="${escapeHTML(img)}" alt="Thumb ${idx}" onclick="goToSlide(${idx})">
     `).join('');
   }
   
@@ -164,9 +175,9 @@ function openModal(id) {
   const feats = document.getElementById('m-feats');
   
   feats.innerHTML = [
-    p.area !== '—' ? `<span style="background:var(--purple-light); color:var(--purple); padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600;"><i class="fa-solid fa-expand" style="margin-right: 4px;"></i> ${p.area}</span>` : '',
-    p.beds !== '—' ? `<span style="background:var(--purple-light); color:var(--purple); padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600;"><i class="fa-solid fa-bed" style="margin-right: 4px;"></i> ${p.beds}</span>` : '',
-    p.bath !== '—' ? `<span style="background:var(--purple-light); color:var(--purple); padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600;"><i class="fa-solid fa-bath" style="margin-right: 4px;"></i> ${p.bath} Bath</span>` : '',
+    p.area !== '—' ? `<span style="background:var(--purple-light); color:var(--purple); padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600;"><i class="fa-solid fa-expand" style="margin-right: 4px;"></i> ${escapeHTML(p.area)}</span>` : '',
+    p.beds !== '—' ? `<span style="background:var(--purple-light); color:var(--purple); padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600;"><i class="fa-solid fa-bed" style="margin-right: 4px;"></i> ${escapeHTML(p.beds)}</span>` : '',
+    p.bath !== '—' ? `<span style="background:var(--purple-light); color:var(--purple); padding:6px 14px; border-radius:20px; font-size:12px; font-weight:600;"><i class="fa-solid fa-bath" style="margin-right: 4px;"></i> ${escapeHTML(p.bath)} Bath</span>` : '',
   ].join('');
   
   document.getElementById('modal').classList.add('open');

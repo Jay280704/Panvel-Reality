@@ -7,6 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='CSS/style.css') }}">
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <style>
   body { 
     padding: 40px 8%; 
@@ -709,6 +710,7 @@
       <div class="modal-header"><i class="fa-solid fa-plus" style="margin-right: 6px; color: var(--purple-mid);"></i> Add New Property</div>
       
       <form action="/admin/properties/add" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="form-grid">
           <div class="form-group full">
             <label for="p-name">Property Title *</label>
@@ -807,6 +809,7 @@
       <div class="modal-header"><i class="fa-solid fa-pen-to-square" style="margin-right: 6px; color: var(--purple-mid);"></i> Edit Property Details</div>
       
       <form action="/admin/properties/edit" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <input type="hidden" id="edit-p-id" name="id">
         <div class="form-grid">
           <div class="form-group full">
@@ -913,6 +916,7 @@
       <div class="modal-header"><i class="fa-solid fa-user-plus" style="margin-right: 6px; color: var(--purple-mid);"></i> Add New Administrator</div>
       
       <form action="/admin/users/add" method="POST">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="form-grid">
           <div class="form-group full">
             <label for="admin-username">Username *</label>
@@ -1193,7 +1197,10 @@
       if (btn) btn.disabled = true;
       
       fetch(`/admin/properties/delete-image/${imageId}`, {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
       })
       .then(res => res.json())
       .then(data => {
@@ -1254,7 +1261,8 @@
       fetch('/admin/update-status', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
         },
         body: JSON.stringify({ id: id, status: newStatus })
       })
@@ -1296,7 +1304,10 @@
       btnEl.textContent = "Deleting...";
 
       fetch(`/admin/properties/delete/${id}`, {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
       })
       .then(res => res.json())
       .then(data => {
@@ -1378,7 +1389,10 @@
       btnEl.textContent = "Deleting...";
 
       fetch(`/admin/users/delete/${id}`, {
-        method: 'POST'
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
       })
       .then(res => res.json())
       .then(data => {
